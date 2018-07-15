@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<!-- xmlns is used to use tags of thymeleaf  -->
+<!-- layout is used to indicate layout file -->
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layouts/main">
+
+<head>
+
+<title>Board</title>
+
+</head>
+
+<body>
+
+	<div layout:fragment="content">
+<div class="container">
+    <br><br><br>
+	<h1 th:text="${boardName}"> board page</h1>
+	</div>
+	</div>
+</body>
+</html>
