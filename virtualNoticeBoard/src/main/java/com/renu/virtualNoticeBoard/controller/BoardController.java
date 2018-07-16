@@ -20,120 +20,83 @@ import com.renu.virtualNoticeBoard.repository.BoardRepository;
 
 @Controller
 public class BoardController {
- private static final Logger LOGGER=LoggerFactory.getLogger(BoardController.class);
- @Autowired
- private BoardRepository boardRepository;
- 
- @RequestMapping(value="/register",method=RequestMethod.POST)
-public String registerBoard(@Valid RegistrationForm registrationForm,
-		BindingResult result,WebRequest request,RedirectAttributes redirectAttributes){
-	 System.out.println(request.getParameter("boardName"));
-	 System.out.println(request.getParameter("password"));
-	 if (result.hasErrors()) {
-		System.out.println(result.getAllErrors());
-		redirectAttributes.addAttribute("error","Please enter password between 4 and 180 characters");
-        return "redirect:/"+request.getParameter("boardName");
-	 
-	 }
-	 Board board=new Board();
-	 board.setName(request.getParameter("boardName"));
-	 board.setPassword(request.getParameter("password"));
-	 boardRepository.save(board);
-	 
-	   return "redirect:/"+request.getParameter("boardName");
-		 
-	 
-	 
-	 
- 
-	 
- }
- 
- 
- 
- 
- 
- 
- @RequestMapping(value="/{boardName}",method=RequestMethod.GET)
- public String showBoard(@PathVariable("boardName") String boardName,Model model) {
-LOGGER.debug("Rendering Board page "+boardName);	
-Board board=boardRepository.findByName(boardName);
+	private static final Logger LOGGER = LoggerFactory.getLogger(BoardController.class);
+	@Autowired
+	private BoardRepository boardRepository;
 
-if (board==null) {
-	LOGGER.debug("Board not found : "+boardName);
-	model.addAttribute("boardName", boardName);
-	return "newboard";
-}
+	@RequestMapping(value = "/register", method = RequestMethod.POST)
+	public String registerBoard(@Valid RegistrationForm registrationForm, BindingResult result, WebRequest request,
+			RedirectAttributes redirectAttributes) {
+		System.out.println(request.getParameter("boardName"));
+		System.out.println(request.getParameter("password"));
+		if (result.hasErrors()) {
+			System.out.println(result.getAllErrors());
+			redirectAttributes.addAttribute("error", "Please enter password between 4 and 180 characters");
+			return "redirect:/" + request.getParameter("boardName");
 
-
-	 model.addAttribute("boardName", boardName);
-	 model.addAttribute("boardContent", board.getContent());
-	 return "board";
-	 
-	 
-
- }
-
- 
- 
- 
- @RequestMapping(value="/{boardName}/edit",method=RequestMethod.GET)
- public String editBoard(@PathVariable("boardName") String boardName,Model model) {
-LOGGER.debug("Rendering Board edit page "+boardName);	
-Board board=boardRepository.findByName(boardName);
-
-if (board==null) {
-	LOGGER.debug("Board not found : "+boardName);
-	
-	
-	return "home";
-}
-model.addAttribute("content",board.getContent());
-System.out.println("from edit");
-	 return "editboard";
-	 
-	 
-
- }
-
- @RequestMapping(value="/{boardName}/edit",method=RequestMethod.POST)
- public String doEditBoard(@PathVariable("boardName") String boardName,
-		 WebRequest request,RedirectAttributes redirectAttributes,Model model) {
-	 Board board=boardRepository.findByName(boardName);
-	 if (board==null) {
-LOGGER.debug("Board not found : "+boardName);
-return "home";
-
-
-	}
-	 
-	 if (board.getPassword().equals(request.getParameter("password"))) {
-		board.setContent(request.getParameter("content"));
+		}
+		Board board = new Board();
+		board.setName(request.getParameter("boardName"));
+		board.setPassword(request.getParameter("password"));
 		boardRepository.save(board);
-		return "redirect:/"+request.getParameter("boardName");
-		
-		
+
+		return "redirect:/" + request.getParameter("boardName");
+
 	}
-	 
-	 redirectAttributes.addAttribute("error","Password missmatch");
-	 return "redirect:/"+request.getParameter("boardName")+"/edit";
-	 
-	 
- }
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
-	
+
+	@RequestMapping(value = "/{boardName}", method = RequestMethod.GET)
+	public String showBoard(@PathVariable("boardName") String boardName, Model model) {
+		LOGGER.debug("Rendering Board page " + boardName);
+		Board board = boardRepository.findByName(boardName);
+
+		if (board == null) {
+			LOGGER.debug("Board not found : " + boardName);
+			model.addAttribute("boardName", boardName);
+			return "newboard";
+		}
+
+		model.addAttribute("boardName", boardName);
+		model.addAttribute("boardContent", board.getContent());
+		return "board";
+
+	}
+
+	@RequestMapping(value = "/{boardName}/edit", method = RequestMethod.GET)
+	public String editBoard(@PathVariable("boardName") String boardName, Model model) {
+		LOGGER.debug("Rendering Board edit page " + boardName);
+		Board board = boardRepository.findByName(boardName);
+
+		if (board == null) {
+			LOGGER.debug("Board not found : " + boardName);
+
+			return "home";
+		}
+		model.addAttribute("content", board.getContent());
+		System.out.println("from edit");
+		return "editboard";
+
+	}
+
+	@RequestMapping(value = "/{boardName}/edit", method = RequestMethod.POST)
+	public String doEditBoard(@PathVariable("boardName") String boardName, WebRequest request,
+			RedirectAttributes redirectAttributes, Model model) {
+		Board board = boardRepository.findByName(boardName);
+		if (board == null) {
+			LOGGER.debug("Board not found : " + boardName);
+			return "home";
+
+		}
+
+		if (board.getPassword().equals(request.getParameter("password"))) {
+			board.setContent(request.getParameter("content"));
+			boardRepository.save(board);
+			return "redirect:/" + request.getParameter("boardName");
+
+		}
+
+		redirectAttributes.addAttribute("error", "Password missmatch");
+		return "redirect:/" + request.getParameter("boardName") + "/edit";
+
+	}
+
 }
