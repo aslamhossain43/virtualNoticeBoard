@@ -10,3 +10,4 @@ public class VirtualNoticeBoardApplication {
 		SpringApplication.run(VirtualNoticeBoardApplication.class, args);
 	}
 }
+
