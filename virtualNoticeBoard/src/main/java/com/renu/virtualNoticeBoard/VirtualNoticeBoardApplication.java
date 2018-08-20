@@ -9,6 +9,5 @@ public class VirtualNoticeBoardApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(VirtualNoticeBoardApplication.class, args);
 	}
-	
 }
 
